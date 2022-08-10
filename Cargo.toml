@@ -1,7 +1,10 @@
 [package]
 name = "reqwest"
-version = "0.11.13"                                   # remember to update html_root_url
+version = "0.11.13"                                                 # remember to update html_root_url
 description = "higher level HTTP client library"
+name = "reqwest-impersonate"
+version = "0.11.12"                                                 # remember to update html_root_url
+description = "A reqwest fork that impersonates the Chrome browser"
 keywords = ["http", "request", "client"]
 categories = ["web-programming::http-client", "wasm"]
 repository = "https://github.com/seanmonstar/reqwest"
@@ -37,10 +40,14 @@ rustls-tls-manual-roots = ["__rustls"]
 rustls-tls-webpki-roots = ["webpki-roots", "__rustls"]
 rustls-tls-native-roots = ["rustls-native-certs", "__rustls"]
 
+boring-tls = ["__boring"]
+
+
 blocking = ["futures-util/io", "tokio/rt-multi-thread", "tokio/sync"]
+chrome = ["__chrome"]
 
-cookies = ["cookie_crate", "cookie_store"]
 
+cookies = ["cookie_crate", "cookie_store", "proc-macro-hack"]
 gzip = ["async-compression", "async-compression/gzip", "tokio-util"]
 
 brotli = ["async-compression", "async-compression/brotli", "tokio-util"]
@@ -66,6 +73,19 @@ __tls = []
 # Enables common rustls code.
 # Equivalent to rustls-tls-manual-roots but shorter :)
 __rustls = ["hyper-rustls", "tokio-rustls", "rustls", "__tls", "rustls-pemfile"]
+
+__boring = [
+    "boring",
+    "tokio-boring",
+    "hyper-boring",
+    "__tls",
+    "boring-sys",
+    "foreign-types",
+]
+
+__chrome = ["__boring", "__browser_common"]
+
+__browser_common = ["brotli", "gzip"]
 
 # When enabled, disable using the cached SYS_PROXIES.
 __internal_proxy_sys_no_cache = []
@@ -126,6 +146,13 @@ tokio-rustls = { version = "0.23", optional = true }
 webpki-roots = { version = "0.22", optional = true }
 rustls-native-certs = { version = "0.6", optional = true }
 rustls-pemfile = { version = "1.0", optional = true }
+
+## boring-tls
+hyper-boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+tokio-boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+boring-sys = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+foreign-types = { version = "0.5.0", optional = true }
 
 ## cookies
 cookie_crate = { version = "0.16", package = "cookie", optional = true }
