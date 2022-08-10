@@ -10,13 +10,16 @@
 //!   [`Identity`][Identity] type.
 //! - Various parts of TLS can also be configured or even disabled on the
 //!   `ClientBuilder`.
-
+#[cfg(feature = "__boring")]
+use boring::x509::X509;
 #[cfg(feature = "__rustls")]
 use rustls::{
     client::HandshakeSignatureValid, client::ServerCertVerified, client::ServerCertVerifier,
     internal::msgs::handshake::DigitallySignedStruct, Error as TLSError, ServerName,
 };
 use std::fmt;
+#[cfg(feature = "__boring")]
+use std::sync::Arc;
 
 /// Represents a server X509 certificate.
 #[derive(Clone)]
@@ -25,6 +28,8 @@ pub struct Certificate {
     native: native_tls_crate::Certificate,
     #[cfg(feature = "__rustls")]
     original: Cert,
+    #[cfg(feature = "__boring")]
+    original: X509,
 }
 
 #[cfg(feature = "__rustls")]
@@ -75,6 +80,8 @@ impl Certificate {
             native: native_tls_crate::Certificate::from_der(der).map_err(crate::error::builder)?,
             #[cfg(feature = "__rustls")]
             original: Cert::Der(der.to_owned()),
+            #[cfg(feature = "__boring")]
+            original: X509::from_der(der).map_err(crate::error::builder)?,
         })
     }
 
@@ -100,6 +107,8 @@ impl Certificate {
             native: native_tls_crate::Certificate::from_pem(pem).map_err(crate::error::builder)?,
             #[cfg(feature = "__rustls")]
             original: Cert::Pem(pem.to_owned()),
+            #[cfg(feature = "__boring")]
+            original: X509::from_pem(pem).map_err(crate::error::builder)?,
         })
     }
 
@@ -350,13 +359,17 @@ pub(crate) enum TlsBackend {
     Rustls,
     #[cfg(feature = "__rustls")]
     BuiltRustls(rustls::ClientConfig),
-    #[cfg(any(feature = "native-tls", feature = "__rustls",))]
+    #[cfg(feature = "__boring")]
+    BoringTls(Arc<dyn Fn() -> boring::ssl::SslConnectorBuilder + Send + Sync>),
+    #[cfg(any(feature = "native-tls", feature = "__rustls", feature = "__boring"))]
     UnknownPreconfigured,
 }
 
 impl fmt::Debug for TlsBackend {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            #[cfg(feature = "__boring")]
+            TlsBackend::BoringTls(_) => write!(f, "BoringTls"),
             #[cfg(feature = "default-tls")]
             TlsBackend::Default => write!(f, "Default"),
             #[cfg(feature = "native-tls")]
@@ -365,7 +378,7 @@ impl fmt::Debug for TlsBackend {
             TlsBackend::Rustls => write!(f, "Rustls"),
             #[cfg(feature = "__rustls")]
             TlsBackend::BuiltRustls(_) => write!(f, "BuiltRustls"),
-            #[cfg(any(feature = "native-tls", feature = "__rustls",))]
+            #[cfg(any(feature = "native-tls", feature = "__rustls", feature = "__boring"))]
             TlsBackend::UnknownPreconfigured => write!(f, "UnknownPreconfigured"),
         }
     }
@@ -381,6 +394,16 @@ impl Default for TlsBackend {
         #[cfg(all(feature = "__rustls", not(feature = "default-tls")))]
         {
             TlsBackend::Rustls
+        }
+
+        #[cfg(all(feature = "__boring", not(feature = "default-tls")))]
+        {
+            use boring::ssl::{SslConnector, SslConnectorBuilder, SslMethod};
+
+            fn create_builder() -> SslConnectorBuilder {
+                SslConnector::builder(SslMethod::tls()).unwrap()
+            }
+            TlsBackend::BoringTls(Arc::new(create_builder))
         }
     }
 }

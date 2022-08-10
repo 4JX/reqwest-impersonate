@@ -704,6 +704,23 @@ impl ClientBuilder {
         self.with_inner(move |inner| inner.use_rustls_tls())
     }
 
+     /// Force using the Boring TLS backend.
+    ///
+    /// Since multiple TLS backends can be optionally enabled, this option will
+    /// force the `boring` backend to be used for this `Client`.
+    ///
+    /// # Optional
+    ///
+    /// This requires the optional `boring-tls(-...)` feature to be enabled.
+    #[cfg(feature = "__boring")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "boring-tls")))]
+    pub fn use_boring_tls(
+        self,
+        builder_func: Arc<dyn Fn() -> boring::ssl::SslConnectorBuilder + Send + Sync>,
+    ) -> ClientBuilder {
+        self.with_inner(move |inner| inner.use_boring_tls(builder_func))
+    }
+
     /// Use a preconfigured TLS backend.
     ///
     /// If the passed `Any` argument is not a TLS backend that reqwest

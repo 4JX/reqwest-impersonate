@@ -1,3 +1,9 @@
+# WIP
+
+The implementation of Boring done here can probably be improved. Some chunks of reqwest might not have Boring specific code yet.
+
+This will eventually be used to mimic Chrome's TLS and HTTP/2 fingerprint, but there's still work to do before that happens.
+
 # reqwest
 
 [![crates.io](https://img.shields.io/crates/v/reqwest.svg)](https://crates.io/crates/reqwest)
@@ -14,7 +20,6 @@ An ergonomic, batteries-included HTTP Client for Rust.
 - Cookie Store
 - WASM
 - [Changelog](CHANGELOG.md)
-
 
 ## Example
 
@@ -67,7 +72,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 On Linux:
 
-- OpenSSL 1.0.1, 1.0.2, 1.1.0, or 1.1.1 with headers (see https://github.com/sfackler/rust-openssl)
+- OpenSSL 1.0.1, 1.0.2, 1.1.0, or 1.1.1 with headers (see <https://github.com/sfackler/rust-openssl>)
 
 On Windows and macOS:
 
@@ -77,13 +82,12 @@ Reqwest uses [rust-native-tls](https://github.com/sfackler/rust-native-tls),
 which will use the operating system TLS framework if available, meaning Windows
 and macOS. On Linux, it will use OpenSSL 1.1.
 
-
 ## License
 
 Licensed under either of
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://apache.org/licenses/LICENSE-2.0)
-- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or <http://apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
 
 ### Contribution
 

@@ -1,7 +1,7 @@
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![cfg_attr(test, deny(warnings))]
+//#![cfg_attr(test, deny(warnings))]
 #![doc(html_root_url = "https://docs.rs/reqwest/0.11.11")]
 
 //! # reqwest
@@ -217,6 +217,8 @@ macro_rules! if_hyper {
     )*}
 }
 
+#[cfg(feature = "__boring")]
+pub use boring;
 pub use http::header;
 pub use http::Method;
 pub use http::{StatusCode, Version};

@@ -239,6 +239,15 @@ impl ClientBuilder {
 
             #[cfg(feature = "__tls")]
             match config.tls {
+                #[cfg(feature = "__boring")]
+                TlsBackend::BoringTls(tls) => Connector::new_boring_tls(
+                    http,
+                    tls,
+                    proxies.clone(),
+                    user_agent(&config.headers),
+                    config.local_address,
+                    config.nodelay,
+                ),
                 #[cfg(feature = "default-tls")]
                 TlsBackend::Default => {
                     let mut tls = TlsConnector::builder();
@@ -448,7 +457,7 @@ impl ClientBuilder {
                         config.nodelay,
                     )
                 }
-                #[cfg(any(feature = "native-tls", feature = "__rustls",))]
+                #[cfg(any(feature = "native-tls", feature = "__rustls", feature = "__boring"))]
                 TlsBackend::UnknownPreconfigured => {
                     return Err(crate::error::builder(
                         "Unknown TLS backend passed to `use_preconfigured_tls`",
@@ -1222,6 +1231,24 @@ impl ClientBuilder {
     #[cfg_attr(docsrs, doc(cfg(feature = "rustls-tls")))]
     pub fn use_rustls_tls(mut self) -> ClientBuilder {
         self.config.tls = TlsBackend::Rustls;
+        self
+    }
+
+    /// Force using the Boring TLS backend.
+    ///
+    /// Since multiple TLS backends can be optionally enabled, this option will
+    /// force the `boring` backend to be used for this `Client`.
+    ///
+    /// # Optional
+    ///
+    /// This requires the optional `boring-tls(-...)` feature to be enabled.
+    #[cfg(feature = "__boring")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "boring-tls")))]
+    pub fn use_boring_tls(
+        mut self,
+        builder_func: Arc<dyn Fn() -> boring::ssl::SslConnectorBuilder + Send + Sync>,
+    ) -> ClientBuilder {
+        self.config.tls = TlsBackend::BoringTls(builder_func);
         self
     }
 
