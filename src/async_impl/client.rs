@@ -203,8 +203,6 @@ impl ClientBuilder {
     }
 
     /// Sets the necessary values to mimic the specified Chrome version.
-    ///
-    /// This is the same as `Client::builder()`.
     #[cfg(feature = "__chrome")]
     pub fn chrome_builder(self, ver: ChromeVersion) -> ClientBuilder {
         let data = build_chrome(ver);

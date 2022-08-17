@@ -67,12 +67,12 @@ fn create_headers() -> HeaderMap {
 
     headers.insert(
         "sec-ch-ua",
-        "Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"104"
+        "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"104\""
             .parse()
             .unwrap(),
     );
     headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
-    headers.insert("sec-ch-ua-platform", "Windows".parse().unwrap());
+    headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
     headers.insert(UPGRADE_INSECURE_REQUESTS, "1".parse().unwrap());
     headers.insert(USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36".parse().unwrap());
     headers.insert(ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9".parse().unwrap());
