@@ -17,7 +17,7 @@ These patches were made specifically for `reqwest-impersonate` to work, but I wo
 `Cargo.toml`
 
 ```toml
-reqwest-boring = { git = "https://github.com/4JX/reqwest-impersonate.git", ref = "d5f78e3", default-features = false, features = [
+reqwest-impersonate = { git = "https://github.com/4JX/reqwest-impersonate.git", ref = "0402610", default-features = false, features = [
     "chrome",
     "blocking",
 ] }
@@ -26,11 +26,11 @@ reqwest-boring = { git = "https://github.com/4JX/reqwest-impersonate.git", ref =
 `main.rs`
 
 ```rs
-use reqwest_boring::ChromeVersion;
+use reqwest_impersonate::ChromeVersion;
 
 fn main() {
     // Build a client to mimic Chrome 104
-    let client = reqwest_boring::blocking::Client::builder()
+    let client = reqwest_impersonate::blocking::Client::builder()
         .chrome_builder(ChromeVersion::V104)
         .build()
         .unwrap();
