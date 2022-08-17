@@ -1,5 +1,7 @@
 #[cfg(feature = "__boring")]
 use boring::ssl::SslConnectorBuilder;
+#[cfg(feature = "__boring")]
+use foreign_types::ForeignTypeRef;
 use futures_util::future::Either;
 #[cfg(feature = "__tls")]
 use http::header::HeaderValue;
@@ -468,6 +470,24 @@ impl Connector {
                 }
 
                 let mut http = hyper_boring::HttpsConnector::with_connector(http, tls())?;
+
+                http.set_callback(|conf, _| {
+                    const ALPN_H2: &str = "h2";
+                    const ALPN_H2_LENGTH: usize = 2;
+
+                    // curl-impersonate does not know how to set this up, neither do I. Hopefully nothing breaks with these values.
+                    unsafe {
+                        boring_sys::SSL_add_application_settings(
+                            conf.as_ptr(),
+                            ALPN_H2.as_ptr(),
+                            ALPN_H2_LENGTH,
+                            std::ptr::null(),
+                            0,
+                        )
+                    };
+
+                    Ok(())
+                });
 
                 let io = http.call(dst).await?;
 

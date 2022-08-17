@@ -69,7 +69,14 @@ __tls = []
 # Equivalent to rustls-tls-manual-roots but shorter :)
 __rustls = ["hyper-rustls", "tokio-rustls", "rustls", "__tls", "rustls-pemfile"]
 
-__boring = ["boring", "tokio-boring", "hyper-boring", "__tls"]
+__boring = [
+    "boring",
+    "tokio-boring",
+    "hyper-boring",
+    "__tls",
+    "boring-sys",
+    "foreign-types",
+]
 
 # When enabled, disable using the cached SYS_PROXIES.
 __internal_proxy_sys_no_cache = []
@@ -132,9 +139,11 @@ rustls-native-certs = { version = "0.6", optional = true }
 rustls-pemfile = { version = "1.0", optional = true }
 
 ## boring-tls
-hyper-boring = { git = "https://github.com/cloudflare/boring", rev = "3841e62", optional = true }
-boring = { git = "https://github.com/cloudflare/boring", rev = "3841e62", optional = true }
-tokio-boring = { git = "https://github.com/cloudflare/boring", rev = "3841e62", optional = true }
+hyper-boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+tokio-boring = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+boring-sys = { git = "https://github.com/4JX/boring", rev = "2a7463a", optional = true }
+foreign-types = { version = "0.5.0", optional = true }
 
 ## cookies
 cookie_crate = { version = "0.16", package = "cookie", optional = true }

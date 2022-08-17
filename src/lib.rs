@@ -217,8 +217,11 @@ macro_rules! if_hyper {
     )*}
 }
 
+/// Re-export of boring to keep versions in check
 #[cfg(feature = "__boring")]
 pub use boring;
+#[cfg(feature = "__boring")]
+pub use boring_sys;
 pub use http::header;
 pub use http::Method;
 pub use http::{StatusCode, Version};

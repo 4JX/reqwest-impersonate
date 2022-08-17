@@ -460,6 +460,36 @@ impl ClientBuilder {
         self.with_inner(|inner| inner.http2_max_frame_size(sz))
     }
 
+    /// Sets the maximum concurrent streams to use for HTTP2.
+    ///
+    /// Passing `None` will do nothing.
+    pub fn http2_max_concurrent_streams(self, sz: impl Into<Option<u32>>) -> ClientBuilder {
+        self.with_inner(|inner| inner.http2_max_concurrent_streams(sz))
+    }
+
+    /// Sets the max header list size to use for HTTP2.
+    ///
+    /// Passing `None` will do nothing.
+    pub fn http2_max_header_list_size(self, sz: impl Into<Option<u32>>) -> ClientBuilder {
+        self.with_inner(|inner| inner.http2_max_header_list_size(sz))
+    }
+
+    /// Enables and disables the push feature for HTTP2.
+    ///
+    /// Passing `None` will do nothing.
+    pub fn http2_enable_push(self, sz: impl Into<Option<bool>>) -> ClientBuilder {
+        self.with_inner(|inner| inner.http2_enable_push(sz))
+
+    }
+
+    /// Sets the header table size to use for HTTP2.
+    ///
+    /// Passing `None` will do nothing.
+
+    pub fn http2_header_table_size(self, sz: impl Into<Option<u32>>) -> ClientBuilder {
+        self.with_inner(|inner| inner.http2_header_table_size(sz))
+    }
+
     // TCP options
 
     /// Set whether sockets have `SO_NODELAY` enabled.
@@ -704,7 +734,7 @@ impl ClientBuilder {
         self.with_inner(move |inner| inner.use_rustls_tls())
     }
 
-     /// Force using the Boring TLS backend.
+    /// Force using the Boring TLS backend.
     ///
     /// Since multiple TLS backends can be optionally enabled, this option will
     /// force the `boring` backend to be used for this `Client`.
