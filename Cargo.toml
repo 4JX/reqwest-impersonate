@@ -1,7 +1,7 @@
 [package]
-name = "reqwest-boring"
-version = "0.11.11"                                   # remember to update html_root_url
-description = "A reqwest fork with BoringSSL support"
+name = "reqwest-impersonate"
+version = "0.11.11"                                                 # remember to update html_root_url
+description = "A reqwest fork that impersonates the Chrome browser"
 keywords = ["http", "request", "client"]
 categories = ["web-programming::http-client", "wasm"]
 repository = "https://github.com/seanmonstar/reqwest"
@@ -41,6 +41,8 @@ boring-tls = ["__boring"]
 
 blocking = ["futures-util/io", "tokio/rt-multi-thread", "tokio/sync"]
 
+chrome = ["__chrome"]
+
 cookies = ["cookie_crate", "cookie_store", "proc-macro-hack"]
 
 gzip = ["async-compression", "async-compression/gzip", "tokio-util"]
@@ -77,6 +79,8 @@ __boring = [
     "boring-sys",
     "foreign-types",
 ]
+
+__chrome = ["__boring", "brotli", "gzip"]
 
 # When enabled, disable using the cached SYS_PROXIES.
 __internal_proxy_sys_no_cache = []
@@ -274,3 +278,7 @@ required-features = ["deflate"]
 name = "multipart"
 path = "tests/multipart.rs"
 required-features = ["multipart"]
+
+[patch.crates-io]
+hyper = { git = "https://github.com/4JX/hyper.git", branch = "0.14.x-patched", ref = "bd25359" }
+h2 = { git = "https://github.com/4JX/h2.git", ref = "b088466" }

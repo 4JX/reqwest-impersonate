@@ -10,8 +10,6 @@
 //!   [`Identity`][Identity] type.
 //! - Various parts of TLS can also be configured or even disabled on the
 //!   `ClientBuilder`.
-#[cfg(feature = "__boring")]
-use boring::x509::X509;
 #[cfg(feature = "__rustls")]
 use rustls::{
     client::HandshakeSignatureValid, client::ServerCertVerified, client::ServerCertVerifier,
@@ -28,8 +26,6 @@ pub struct Certificate {
     native: native_tls_crate::Certificate,
     #[cfg(feature = "__rustls")]
     original: Cert,
-    #[cfg(feature = "__boring")]
-    original: X509,
 }
 
 #[cfg(feature = "__rustls")]
@@ -74,14 +70,13 @@ impl Certificate {
     /// # Ok(())
     /// # }
     /// ```
+    #[cfg(any(not(feature = "__boring"), feature = "native-tls-crate", feature = "__rustls"))]
     pub fn from_der(der: &[u8]) -> crate::Result<Certificate> {
         Ok(Certificate {
             #[cfg(feature = "native-tls-crate")]
             native: native_tls_crate::Certificate::from_der(der).map_err(crate::error::builder)?,
             #[cfg(feature = "__rustls")]
             original: Cert::Der(der.to_owned()),
-            #[cfg(feature = "__boring")]
-            original: X509::from_der(der).map_err(crate::error::builder)?,
         })
     }
 
@@ -101,14 +96,13 @@ impl Certificate {
     /// # Ok(())
     /// # }
     /// ```
+    #[cfg(any(not(feature = "__boring"), feature = "native-tls-crate", feature = "__rustls"))]
     pub fn from_pem(pem: &[u8]) -> crate::Result<Certificate> {
         Ok(Certificate {
             #[cfg(feature = "native-tls-crate")]
             native: native_tls_crate::Certificate::from_pem(pem).map_err(crate::error::builder)?,
             #[cfg(feature = "__rustls")]
             original: Cert::Pem(pem.to_owned()),
-            #[cfg(feature = "__boring")]
-            original: X509::from_pem(pem).map_err(crate::error::builder)?,
         })
     }
 
@@ -361,7 +355,7 @@ pub(crate) enum TlsBackend {
     BuiltRustls(rustls::ClientConfig),
     #[cfg(feature = "__boring")]
     BoringTls(Arc<dyn Fn() -> boring::ssl::SslConnectorBuilder + Send + Sync>),
-    #[cfg(any(feature = "native-tls", feature = "__rustls", feature = "__boring"))]
+    #[cfg(any(feature = "native-tls", feature = "__rustls"))]
     UnknownPreconfigured,
 }
 
@@ -378,7 +372,7 @@ impl fmt::Debug for TlsBackend {
             TlsBackend::Rustls => write!(f, "Rustls"),
             #[cfg(feature = "__rustls")]
             TlsBackend::BuiltRustls(_) => write!(f, "BuiltRustls"),
-            #[cfg(any(feature = "native-tls", feature = "__rustls", feature = "__boring"))]
+            #[cfg(any(feature = "native-tls", feature = "__rustls"))]
             TlsBackend::UnknownPreconfigured => write!(f, "UnknownPreconfigured"),
         }
     }

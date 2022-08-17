@@ -1,10 +1,53 @@
-# WIP
+# reqwest-impersonate
 
-The implementation of Boring done here can probably be improved. Some chunks of reqwest might not have Boring specific code yet.
+A fork of reqwest used to impersonate the Chrome browser. Inspired by [curl-impersonate](https://github.com/lwthiker/curl-impersonate).
 
-This will eventually be used to mimic Chrome's TLS and HTTP/2 fingerprint, but there's still work to do before that happens.
+**Notice:** This crate depends on patched dependencies. To use it, please add the following to your `Cargo.toml`.
 
-# reqwest
+```toml
+[patch.crates-io]
+hyper = { git = "https://github.com/4JX/hyper.git", branch = "0.14.x-patched", ref = "bd25359" }
+h2 = { git = "https://github.com/4JX/h2.git", ref = "b088466" }
+```
+
+These patches were made specifically for `reqwest-impersonate` to work, but I would appreciate if someone took the time to PR more "proper" versions to the parent projects.
+
+## Example
+
+`Cargo.toml`
+
+```toml
+reqwest-boring = { git = "https://github.com/4JX/reqwest-impersonate.git", ref = "d5f78e3", default-features = false, features = [
+    "chrome",
+    "blocking",
+] }
+```
+
+`main.rs`
+
+```rs
+use reqwest_boring::ChromeVersion;
+
+fn main() {
+    // Build a client to mimic Chrome 104
+    let client = reqwest_boring::blocking::Client::builder()
+        .chrome_builder(ChromeVersion::V104)
+        .build()
+        .unwrap();
+
+    // Use the API you're already familiar with
+    match client.get("https://yoururl.com").send() {
+        Ok(res) => {
+            println!("{:?}", res.text().unwrap());
+        }
+        Err(err) => {
+            dbg!(err);
+        }
+    };
+}
+```
+
+## Original readme
 
 [![crates.io](https://img.shields.io/crates/v/reqwest.svg)](https://crates.io/crates/reqwest)
 [![Documentation](https://docs.rs/reqwest/badge.svg)](https://docs.rs/reqwest)

@@ -20,6 +20,8 @@ use super::wait;
 use crate::tls;
 #[cfg(feature = "__tls")]
 use crate::Certificate;
+#[cfg(feature = "__chrome")]
+use crate::ChromeVersion;
 #[cfg(any(feature = "native-tls", feature = "__rustls"))]
 use crate::Identity;
 use crate::{async_impl, header, redirect, IntoUrl, Method, Proxy};
@@ -86,6 +88,12 @@ impl ClientBuilder {
             inner: async_impl::ClientBuilder::new(),
             timeout: Timeout::default(),
         }
+    }
+
+    /// Sets the necessary values to mimic the specified Chrome version.
+    #[cfg(feature = "__chrome")]
+    pub fn chrome_builder(self, ver: ChromeVersion) -> ClientBuilder {
+        self.with_inner(move |inner| inner.chrome_builder(ver))
     }
 
     /// Returns a `Client` that uses this `ClientBuilder` configuration.
@@ -479,7 +487,6 @@ impl ClientBuilder {
     /// Passing `None` will do nothing.
     pub fn http2_enable_push(self, sz: impl Into<Option<bool>>) -> ClientBuilder {
         self.with_inner(|inner| inner.http2_enable_push(sz))
-
     }
 
     /// Sets the header table size to use for HTTP2.
