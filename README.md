@@ -2,9 +2,9 @@
 
 A fork of reqwest used to impersonate the Chrome browser. Inspired by [curl-impersonate](https://github.com/lwthiker/curl-impersonate).
 
-This crate was intended to be an experiment to learn more about TLS and HTTP2 fingerprinting. Some parts of it may not have the code needed to work. (It currently fails to connect to Google specific domains).
+This crate was intended to be an experiment to learn more about TLS and HTTP2 fingerprinting. Some parts of reqwest may not have the code needed to work when used to copy Chrome. 
 
-Currently, the order of the `acccept` header is not respected, but most sites seem to ignore that.
+It currently fails to connect to Google specific domains, and the order of the `acccept` header is not respected, but most sites seem to ignore that.
 
 **Notice:** This crate depends on patched dependencies. To use it, please add the following to your `Cargo.toml`.
 
