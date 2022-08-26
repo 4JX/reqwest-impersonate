@@ -195,6 +195,9 @@ enum Inner {
     },
 }
 
+const ALPN_H2: &str = "h2";
+const ALPN_H2_LENGTH: usize = 2;
+
 impl Connector {
     #[cfg(not(feature = "__tls"))]
     pub(crate) fn new<T>(
@@ -472,9 +475,6 @@ impl Connector {
                 let mut http = hyper_boring::HttpsConnector::with_connector(http, tls())?;
 
                 http.set_callback(|conf, _| {
-                    const ALPN_H2: &str = "h2";
-                    const ALPN_H2_LENGTH: usize = 2;
-
                     // curl-impersonate does not know how to set this up, neither do I. Hopefully nothing breaks with these values.
                     unsafe {
                         boring_sys::SSL_add_application_settings(
@@ -597,6 +597,22 @@ impl Connector {
                     let tls_connector = tls();
                     let mut http =
                         hyper_boring::HttpsConnector::with_connector(http, tls_connector)?;
+
+                    http.set_callback(|conf, _| {
+                        // May or may not work
+                        unsafe {
+                            boring_sys::SSL_add_application_settings(
+                                conf.as_ptr(),
+                                ALPN_H2.as_ptr(),
+                                ALPN_H2_LENGTH,
+                                std::ptr::null(),
+                                0,
+                            )
+                        };
+
+                        Ok(())
+                    });
+
                     let conn = http.call(proxy_dst).await?;
                     log::trace!("tunneling HTTPS over proxy");
                     let tunneled = tunnel(
@@ -608,12 +624,20 @@ impl Connector {
                     )
                     .await?;
                     let tls_connector = tls().build();
-                    let io = tokio_boring::connect(
-                        tls_connector.configure()?,
-                        host.ok_or("no host in url")?,
-                        tunneled,
-                    )
-                    .await?;
+                    let conf = tls_connector.configure()?;
+
+                    unsafe {
+                        boring_sys::SSL_add_application_settings(
+                            conf.as_ptr(),
+                            ALPN_H2.as_ptr(),
+                            ALPN_H2_LENGTH,
+                            std::ptr::null(),
+                            0,
+                        )
+                    };
+
+                    let io = tokio_boring::connect(conf, host.ok_or("no host in url")?, tunneled)
+                        .await?;
                     return Ok(Conn {
                         inner: self.verbose.wrap(BoringTlsConn { inner: io }),
                         is_proxy: false,
