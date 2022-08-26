@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use crate::chrome::{ChromeVersionData, Http2Data};
 
-use boring::ssl::{CertCompressionAlgorithm, SslConnector, SslConnectorBuilder, SslMethod};
+use boring::ssl::{
+    CertCompressionAlgorithm, SslConnector, SslConnectorBuilder, SslMethod, SslVersion,
+};
 use http::{
     header::{ACCEPT, ACCEPT_ENCODING, ACCEPT_LANGUAGE, UPGRADE_INSECURE_REQUESTS, USER_AGENT},
     HeaderMap,
@@ -51,12 +53,33 @@ fn create_ssl_connector() -> SslConnectorBuilder {
 
     builder.set_cipher_list(&cipher_list.join(":")).unwrap();
 
+    let sigalgs_list = [
+        "ecdsa_secp256r1_sha256",
+        "rsa_pss_rsae_sha256",
+        "rsa_pkcs1_sha256",
+        "ecdsa_secp384r1_sha384",
+        "rsa_pss_rsae_sha384",
+        "rsa_pkcs1_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pkcs1_sha512",
+    ];
+
+    builder.set_sigalgs_list(&sigalgs_list.join(":")).unwrap();
+
     builder.enable_signed_cert_timestamps();
 
     builder.set_alpn_protos(b"\x02h2\x08http/1.1").unwrap();
 
     builder
         .add_cert_compression_alg(CertCompressionAlgorithm::Brotli)
+        .unwrap();
+
+    builder
+        .set_min_proto_version(Some(SslVersion::TLS1_2))
+        .unwrap();
+
+    builder
+        .set_max_proto_version(Some(SslVersion::TLS1_3))
         .unwrap();
 
     builder

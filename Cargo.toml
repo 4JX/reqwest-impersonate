@@ -21,7 +21,7 @@ targets = ["x86_64-unknown-linux-gnu", "wasm32-unknown-unknown"]
 features = ["blocking", "cookies", "json", "multipart"]
 
 [features]
-default = ["boring-tls"]
+default = ["boring-tls", "chrome"]
 
 # Note: this doesn't enable the 'native-tls' feature, which adds specific
 # functionality for it.
