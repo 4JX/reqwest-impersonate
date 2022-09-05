@@ -29,7 +29,7 @@ use super::request::{Request, RequestBuilder};
 use super::response::Response;
 use super::Body;
 #[cfg(feature = "__chrome")]
-use crate::chrome::{build_chrome, ChromeVersion};
+use crate::browser::{configure_chrome, ChromeVersion};
 use crate::connect::{Connector, HttpConnector};
 #[cfg(feature = "cookies")]
 use crate::cookie;
@@ -205,17 +205,7 @@ impl ClientBuilder {
     /// Sets the necessary values to mimic the specified Chrome version.
     #[cfg(feature = "__chrome")]
     pub fn chrome_builder(self, ver: ChromeVersion) -> ClientBuilder {
-        let data = build_chrome(ver);
-
-        self.use_boring_tls(data.tls_builder_func)
-            .http2_initial_stream_window_size(data.http2.initial_stream_window_size)
-            .http2_initial_connection_window_size(data.http2.initial_connection_window_size)
-            .http2_max_concurrent_streams(data.http2.max_concurrent_streams)
-            .http2_max_header_list_size(data.http2.max_header_list_size)
-            .http2_header_table_size(data.http2.header_table_size)
-            .default_headers(data.headers)
-            .brotli(data.brotli)
-            .gzip(data.gzip)
+        configure_chrome(ver, self)
     }
     /// Returns a `Client` that uses this `ClientBuilder` configuration.
     ///

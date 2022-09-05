@@ -16,12 +16,12 @@ use tokio::sync::{mpsc, oneshot};
 use super::request::{Request, RequestBuilder};
 use super::response::Response;
 use super::wait;
+#[cfg(feature = "__chrome")]
+use crate::browser::ChromeVersion;
 #[cfg(feature = "__tls")]
 use crate::tls;
 #[cfg(feature = "__tls")]
 use crate::Certificate;
-#[cfg(feature = "__chrome")]
-use crate::ChromeVersion;
 #[cfg(any(feature = "native-tls", feature = "__rustls"))]
 use crate::Identity;
 use crate::{async_impl, header, redirect, IntoUrl, Method, Proxy};

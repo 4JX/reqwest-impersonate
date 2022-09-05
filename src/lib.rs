@@ -222,8 +222,6 @@ macro_rules! if_hyper {
 pub use boring;
 #[cfg(feature = "__boring")]
 pub use boring_sys;
-#[cfg(feature = "__chrome")]
-pub use chrome::ChromeVersion;
 pub use http::header;
 pub use http::Method;
 pub use http::{StatusCode, Version};
@@ -232,8 +230,8 @@ pub use url::Url;
 // universal mods
 #[macro_use]
 mod error;
-#[cfg(feature = "__chrome")]
-mod chrome;
+#[cfg(feature = "__browser_common")]
+pub mod browser;
 mod into_url;
 mod response;
 

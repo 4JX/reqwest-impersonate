@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use crate::chrome::{ChromeVersionData, Http2Data};
-
 use boring::ssl::{
     CertCompressionAlgorithm, SslConnector, SslConnectorBuilder, SslMethod, SslVersion,
 };
@@ -10,8 +8,10 @@ use http::{
     HeaderMap,
 };
 
-pub(crate) fn get_data() -> ChromeVersionData {
-    ChromeVersionData {
+use crate::browser::{BrowserSettings, Http2Data};
+
+pub(super) fn get_settings() -> BrowserSettings {
+    BrowserSettings {
         tls_builder_func: Arc::new(create_ssl_connector),
         http2: Http2Data {
             initial_stream_window_size: 6291456,

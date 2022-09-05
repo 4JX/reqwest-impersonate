@@ -1,24 +1,20 @@
+//! Holds structs and information to aid in impersonating a set of browsers
+
 use std::sync::Arc;
 
 use boring::ssl::SslConnectorBuilder;
 use http::HeaderMap;
 
-mod ver;
+#[cfg(feature = "__chrome")]
+pub use chrome::ChromeVersion;
 
-pub(crate) fn build_chrome(ver: ChromeVersion) -> ChromeVersionData {
-    match ver {
-        ChromeVersion::V104 => ver::v104::get_data(),
-    }
-}
+#[cfg(feature = "__chrome")]
+mod chrome;
 
-/// Defines the Chrome version to mimic when setting up a builder
-#[derive(Debug)]
-#[allow(missing_docs)]
-pub enum ChromeVersion {
-    V104,
-}
+#[cfg(feature = "__chrome")]
+pub(crate) use chrome::configure_chrome;
 
-pub(crate) struct ChromeVersionData {
+struct BrowserSettings {
     pub tls_builder_func: Arc<dyn Fn() -> SslConnectorBuilder + Send + Sync>,
     pub http2: Http2Data,
     pub headers: HeaderMap,
@@ -26,7 +22,7 @@ pub(crate) struct ChromeVersionData {
     pub brotli: bool,
 }
 
-pub(crate) struct Http2Data {
+struct Http2Data {
     pub initial_stream_window_size: u32,
     pub initial_connection_window_size: u32,
     pub max_concurrent_streams: u32,

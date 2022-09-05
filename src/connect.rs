@@ -195,6 +195,7 @@ enum Inner {
     },
 }
 
+#[cfg(feature = "__boring")]
 fn tls_add_application_settings(conf: &mut ConnectConfiguration) {
     // curl-impersonate does not know how to set this up, neither do I. Hopefully nothing breaks with these values.
 
