@@ -657,9 +657,7 @@ impl ClientBuilder {
     /// # }
     /// ```
     pub fn default_headers(mut self, headers: HeaderMap) -> ClientBuilder {
-        for (key, value) in headers.iter() {
-            self.config.headers.insert(key, value.clone());
-        }
+        self.config.headers = headers;
         self
     }
 
