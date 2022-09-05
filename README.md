@@ -2,7 +2,7 @@
 
 A fork of reqwest used to impersonate the Chrome browser. Inspired by [curl-impersonate](https://github.com/lwthiker/curl-impersonate).
 
-This crate was intended to be an experiment to learn more about TLS and HTTP2 fingerprinting. Some parts of reqwest may not have the code needed to work when used to copy Chrome. 
+This crate was intended to be an experiment to learn more about TLS and HTTP2 fingerprinting. Some parts of reqwest may not have the code needed to work when used to copy Chrome.
 
 It currently fails to connect to Google specific domains, and the order of the `acccept` header is not respected, but most sites seem to ignore that.
 
@@ -11,7 +11,7 @@ It currently fails to connect to Google specific domains, and the order of the `
 ```toml
 [patch.crates-io]
 hyper = { git = "https://github.com/4JX/hyper.git", branch = "0.14.x-patched", ref = "bd25359" }
-h2 = { git = "https://github.com/4JX/h2.git", ref = "b088466" }
+h2 = { git = "https://github.com/4JX/h2.git", branch = "imp", ref = "90af7b9" }
 ```
 
 These patches were made specifically for `reqwest-impersonate` to work, but I would appreciate if someone took the time to PR more "proper" versions to the parent projects.
