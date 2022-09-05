@@ -1,5 +1,5 @@
 #[cfg(feature = "__boring")]
-use boring::ssl::SslConnectorBuilder;
+use boring::ssl::{ConnectConfiguration, SslConnectorBuilder};
 #[cfg(feature = "__boring")]
 use foreign_types::ForeignTypeRef;
 use futures_util::future::Either;
@@ -195,8 +195,21 @@ enum Inner {
     },
 }
 
-const ALPN_H2: &str = "h2";
-const ALPN_H2_LENGTH: usize = 2;
+fn tls_add_application_settings(conf: &mut ConnectConfiguration) {
+    // curl-impersonate does not know how to set this up, neither do I. Hopefully nothing breaks with these values.
+
+    const ALPN_H2: &str = "h2";
+    const ALPN_H2_LENGTH: usize = 2;
+    unsafe {
+        boring_sys::SSL_add_application_settings(
+            conf.as_ptr(),
+            ALPN_H2.as_ptr(),
+            ALPN_H2_LENGTH,
+            std::ptr::null(),
+            0,
+        )
+    };
+}
 
 impl Connector {
     #[cfg(not(feature = "__tls"))]
@@ -475,17 +488,7 @@ impl Connector {
                 let mut http = hyper_boring::HttpsConnector::with_connector(http, tls())?;
 
                 http.set_callback(|conf, _| {
-                    // curl-impersonate does not know how to set this up, neither do I. Hopefully nothing breaks with these values.
-                    unsafe {
-                        boring_sys::SSL_add_application_settings(
-                            conf.as_ptr(),
-                            ALPN_H2.as_ptr(),
-                            ALPN_H2_LENGTH,
-                            std::ptr::null(),
-                            0,
-                        )
-                    };
-
+                    tls_add_application_settings(conf);
                     Ok(())
                 });
 
@@ -599,16 +602,7 @@ impl Connector {
                         hyper_boring::HttpsConnector::with_connector(http, tls_connector)?;
 
                     http.set_callback(|conf, _| {
-                        // May or may not work
-                        unsafe {
-                            boring_sys::SSL_add_application_settings(
-                                conf.as_ptr(),
-                                ALPN_H2.as_ptr(),
-                                ALPN_H2_LENGTH,
-                                std::ptr::null(),
-                                0,
-                            )
-                        };
+                        tls_add_application_settings(conf);
 
                         Ok(())
                     });
@@ -624,17 +618,9 @@ impl Connector {
                     )
                     .await?;
                     let tls_connector = tls().build();
-                    let conf = tls_connector.configure()?;
+                    let mut conf = tls_connector.configure()?;
 
-                    unsafe {
-                        boring_sys::SSL_add_application_settings(
-                            conf.as_ptr(),
-                            ALPN_H2.as_ptr(),
-                            ALPN_H2_LENGTH,
-                            std::ptr::null(),
-                            0,
-                        )
-                    };
+                    tls_add_application_settings(&mut conf);
 
                     let io = tokio_boring::connect(conf, host.ok_or("no host in url")?, tunneled)
                         .await?;
