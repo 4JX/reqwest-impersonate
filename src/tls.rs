@@ -65,12 +65,16 @@ impl Certificate {
     /// let mut buf = Vec::new();
     /// File::open("my_cert.der")?
     ///     .read_to_end(&mut buf)?;
-    /// let cert = reqwest::Certificate::from_der(&buf)?;
+    /// let cert = reqwest_impersonate::Certificate::from_der(&buf)?;
     /// # drop(cert);
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(any(not(feature = "__boring"), feature = "native-tls-crate", feature = "__rustls"))]
+    #[cfg(any(
+        not(feature = "__boring"),
+        feature = "native-tls-crate",
+        feature = "__rustls"
+    ))]
     pub fn from_der(der: &[u8]) -> crate::Result<Certificate> {
         Ok(Certificate {
             #[cfg(feature = "native-tls-crate")]
@@ -91,12 +95,16 @@ impl Certificate {
     /// let mut buf = Vec::new();
     /// File::open("my_cert.pem")?
     ///     .read_to_end(&mut buf)?;
-    /// let cert = reqwest::Certificate::from_pem(&buf)?;
+    /// let cert = reqwest_impersonate::Certificate::from_pem(&buf)?;
     /// # drop(cert);
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(any(not(feature = "__boring"), feature = "native-tls-crate", feature = "__rustls"))]
+    #[cfg(any(
+        not(feature = "__boring"),
+        feature = "native-tls-crate",
+        feature = "__rustls"
+    ))]
     pub fn from_pem(pem: &[u8]) -> crate::Result<Certificate> {
         Ok(Certificate {
             #[cfg(feature = "native-tls-crate")]
@@ -163,7 +171,7 @@ impl Identity {
     /// let mut buf = Vec::new();
     /// File::open("my-ident.pfx")?
     ///     .read_to_end(&mut buf)?;
-    /// let pkcs12 = reqwest::Identity::from_pkcs12_der(&buf, "my-privkey-password")?;
+    /// let pkcs12 = reqwest_impersonate::Identity::from_pkcs12_der(&buf, "my-privkey-password")?;
     /// # drop(pkcs12);
     /// # Ok(())
     /// # }
@@ -198,7 +206,7 @@ impl Identity {
     /// let mut buf = Vec::new();
     /// File::open("my-ident.pem")?
     ///     .read_to_end(&mut buf)?;
-    /// let id = reqwest::Identity::from_pem(&buf)?;
+    /// let id = reqwest_impersonate::Identity::from_pem(&buf)?;
     /// # drop(id);
     /// # Ok(())
     /// # }

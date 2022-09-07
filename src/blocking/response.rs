@@ -54,7 +54,7 @@ impl Response {
     /// ```rust
     /// # #[cfg(feature = "json")]
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let resp = reqwest::blocking::get("http://httpbin.org/get")?;
+    /// let resp = reqwest_impersonate::blocking::get("http://httpbin.org/get")?;
     /// if resp.status().is_success() {
     ///     println!("success!");
     /// } else if resp.status().is_server_error() {
@@ -69,8 +69,8 @@ impl Response {
     /// Checking for specific status codes:
     ///
     /// ```rust
-    /// use reqwest::blocking::Client;
-    /// use reqwest::StatusCode;
+    /// use reqwest_impersonate::blocking::Client;
+    /// use reqwest_impersonate::StatusCode;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
     /// let client = Client::new();
     ///
@@ -100,8 +100,8 @@ impl Response {
     /// Saving an etag when caching a file:
     ///
     /// ```
-    /// use reqwest::blocking::Client;
-    /// use reqwest::header::ETAG;
+    /// use reqwest_impersonate::blocking::Client;
+    /// use reqwest_impersonate::header::ETAG;
     ///
     /// # fn run() -> Result<(), Box<std::error::Error>> {
     /// let client = Client::new();
@@ -153,7 +153,7 @@ impl Response {
     ///
     /// ```rust
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let resp = reqwest::blocking::get("http://httpbin.org/redirect/1")?;
+    /// let resp = reqwest_impersonate::blocking::get("http://httpbin.org/redirect/1")?;
     /// assert_eq!(resp.url().as_str(), "http://httpbin.org/get");
     /// # Ok(())
     /// # }
@@ -169,7 +169,7 @@ impl Response {
     ///
     /// ```rust
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let resp = reqwest::blocking::get("http://httpbin.org/redirect/1")?;
+    /// let resp = reqwest_impersonate::blocking::get("http://httpbin.org/redirect/1")?;
     /// println!("httpbin.org address: {:?}", resp.remote_addr());
     /// # Ok(())
     /// # }
@@ -211,7 +211,7 @@ impl Response {
     /// # extern crate reqwest;
     /// # extern crate serde;
     /// #
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     /// # use serde::Deserialize;
     /// #
     /// // This `derive` requires the `serde` dependency.
@@ -221,7 +221,7 @@ impl Response {
     /// }
     ///
     /// # fn run() -> Result<(), Error> {
-    /// let json: Ip = reqwest::blocking::get("http://httpbin.org/ip")?.json()?;
+    /// let json: Ip = reqwest_impersonate::blocking::get("http://httpbin.org/ip")?.json()?;
     /// # Ok(())
     /// # }
     /// #
@@ -250,7 +250,7 @@ impl Response {
     ///
     /// ```
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
-    /// let bytes = reqwest::blocking::get("http://httpbin.org/ip")?.bytes()?;
+    /// let bytes = reqwest_impersonate::blocking::get("http://httpbin.org/ip")?.bytes()?;
     ///
     /// println!("bytes: {:?}", bytes);
     /// # Ok(())
@@ -275,7 +275,7 @@ impl Response {
     /// ```rust
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let content = reqwest::blocking::get("http://httpbin.org/range/26")?.text()?;
+    /// let content = reqwest_impersonate::blocking::get("http://httpbin.org/range/26")?.text()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -298,7 +298,7 @@ impl Response {
     /// ```rust
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let content = reqwest::blocking::get("http://httpbin.org/range/26")?
+    /// let content = reqwest_impersonate::blocking::get("http://httpbin.org/range/26")?
     ///     .text_with_charset("utf-8")?;
     /// # Ok(())
     /// # }
@@ -325,7 +325,7 @@ impl Response {
     ///
     /// ```rust
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let mut resp = reqwest::blocking::get("http://httpbin.org/range/5")?;
+    /// let mut resp = reqwest_impersonate::blocking::get("http://httpbin.org/range/5")?;
     /// let mut buf: Vec<u8> = vec![];
     /// resp.copy_to(&mut buf)?;
     /// assert_eq!(b"abcde", buf.as_slice());
@@ -346,10 +346,10 @@ impl Response {
     /// ```rust,no_run
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let res = reqwest::blocking::get("http://httpbin.org/status/400")?
+    /// let res = reqwest_impersonate::blocking::get("http://httpbin.org/status/400")?
     ///     .error_for_status();
     /// if let Err(err) = res {
-    ///     assert_eq!(err.status(), Some(reqwest::StatusCode::BAD_REQUEST));
+    ///     assert_eq!(err.status(), Some(reqwest_impersonate::StatusCode::BAD_REQUEST));
     /// }
     /// # Ok(())
     /// # }
@@ -377,10 +377,10 @@ impl Response {
     /// ```rust,no_run
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let res = reqwest::blocking::get("http://httpbin.org/status/400")?;
+    /// let res = reqwest_impersonate::blocking::get("http://httpbin.org/status/400")?;
     /// let res = res.error_for_status_ref();
     /// if let Err(err) = res {
-    ///     assert_eq!(err.status(), Some(reqwest::StatusCode::BAD_REQUEST));
+    ///     assert_eq!(err.status(), Some(reqwest_impersonate::StatusCode::BAD_REQUEST));
     /// }
     /// # Ok(())
     /// # }

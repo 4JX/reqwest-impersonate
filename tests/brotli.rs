@@ -24,7 +24,7 @@ async fn test_brotli_empty_body() {
             .unwrap()
     });
 
-    let client = reqwest::Client::new();
+    let client = reqwest_impersonate::Client::new();
     let res = client
         .head(&format!("http://{}/brotli", server.addr()))
         .send()
@@ -47,19 +47,19 @@ async fn test_accept_header_is_not_changed_if_set() {
         http::Response::default()
     });
 
-    let client = reqwest::Client::new();
+    let client = reqwest_impersonate::Client::new();
 
     let res = client
         .get(&format!("http://{}/accept", server.addr()))
         .header(
-            reqwest::header::ACCEPT,
-            reqwest::header::HeaderValue::from_static("application/json"),
+            reqwest_impersonate::header::ACCEPT,
+            reqwest_impersonate::header::HeaderValue::from_static("application/json"),
         )
         .send()
         .await
         .unwrap();
 
-    assert_eq!(res.status(), reqwest::StatusCode::OK);
+    assert_eq!(res.status(), reqwest_impersonate::StatusCode::OK);
 }
 
 #[tokio::test]
@@ -70,19 +70,19 @@ async fn test_accept_encoding_header_is_not_changed_if_set() {
         http::Response::default()
     });
 
-    let client = reqwest::Client::new();
+    let client = reqwest_impersonate::Client::new();
 
     let res = client
         .get(&format!("http://{}/accept-encoding", server.addr()))
         .header(
-            reqwest::header::ACCEPT_ENCODING,
-            reqwest::header::HeaderValue::from_static("identity"),
+            reqwest_impersonate::header::ACCEPT_ENCODING,
+            reqwest_impersonate::header::HeaderValue::from_static("identity"),
         )
         .send()
         .await
         .unwrap();
 
-    assert_eq!(res.status(), reqwest::StatusCode::OK);
+    assert_eq!(res.status(), reqwest_impersonate::StatusCode::OK);
 }
 
 async fn brotli_case(response_size: usize, chunk_size: usize) {
@@ -135,7 +135,7 @@ async fn brotli_case(response_size: usize, chunk_size: usize) {
         }
     });
 
-    let client = reqwest::Client::new();
+    let client = reqwest_impersonate::Client::new();
 
     let res = client
         .get(&format!("http://{}/brotli", server.addr()))

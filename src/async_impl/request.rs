@@ -235,10 +235,10 @@ impl RequestBuilder {
     /// Enable HTTP basic authentication.
     ///
     /// ```rust
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     ///
     /// # async fn run() -> Result<(), Error> {
-    /// let client = reqwest::Client::new();
+    /// let client = reqwest_impersonate::Client::new();
     /// let resp = client.delete("http://httpbin.org/delete")
     ///     .basic_auth("admin", Some("good password"))
     ///     .send()
@@ -296,11 +296,11 @@ impl RequestBuilder {
     /// Sends a multipart/form-data body.
     ///
     /// ```
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     ///
     /// # async fn run() -> Result<(), Error> {
-    /// let client = reqwest::Client::new();
-    /// let form = reqwest::multipart::Form::new()
+    /// let client = reqwest_impersonate::Client::new();
+    /// let form = reqwest_impersonate::multipart::Form::new()
     ///     .text("key3", "value3")
     ///     .text("key4", "value4");
     ///
@@ -386,14 +386,14 @@ impl RequestBuilder {
     /// header.
     ///
     /// ```rust
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     /// # use std::collections::HashMap;
     /// #
     /// # async fn run() -> Result<(), Error> {
     /// let mut params = HashMap::new();
     /// params.insert("lang", "rust");
     ///
-    /// let client = reqwest::Client::new();
+    /// let client = reqwest_impersonate::Client::new();
     /// let res = client.post("http://httpbin.org")
     ///     .form(&params)
     ///     .send()
@@ -486,10 +486,10 @@ impl RequestBuilder {
     /// # Example
     ///
     /// ```no_run
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     /// #
     /// # async fn run() -> Result<(), Error> {
-    /// let response = reqwest::Client::new()
+    /// let response = reqwest_impersonate::Client::new()
     ///     .get("https://hyper.rs")
     ///     .send()
     ///     .await?;
@@ -511,10 +511,10 @@ impl RequestBuilder {
     /// # Examples
     ///
     /// ```
-    /// # use reqwest::Error;
+    /// # use reqwest_impersonate::Error;
     /// #
     /// # fn run() -> Result<(), Error> {
-    /// let client = reqwest::Client::new();
+    /// let client = reqwest_impersonate::Client::new();
     /// let builder = client.post("http://httpbin.org/post")
     ///     .body("from a &str!");
     /// let clone = builder.try_clone();

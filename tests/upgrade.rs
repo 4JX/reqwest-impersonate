@@ -30,7 +30,7 @@ async fn http_upgrade() {
         }
     });
 
-    let res = reqwest::Client::builder()
+    let res = reqwest_impersonate::Client::builder()
         .build()
         .unwrap()
         .get(format!("http://{}", server.addr()))

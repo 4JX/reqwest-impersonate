@@ -60,7 +60,7 @@ impl Form {
     /// # Examples
     ///
     /// ```
-    /// let form = reqwest::multipart::Form::new()
+    /// let form = reqwest_impersonate::multipart::Form::new()
     ///     .text("username", "seanmonstar")
     ///     .text("password", "secret");
     /// ```

@@ -19,8 +19,8 @@
 //! - Uses system-native [TLS](#tls)
 //! - Cookies
 //!
-//! The [`reqwest::Client`][client] is asynchronous. For applications wishing
-//! to only make a few HTTP requests, the [`reqwest::blocking`](blocking) API
+//! The [`reqwest_impersonate::Client`][client] is asynchronous. For applications wishing
+//! to only make a few HTTP requests, the [`reqwest_impersonate::blocking`](blocking) API
 //! may be more convenient.
 //!
 //! Additional learning resources include:
@@ -33,8 +33,8 @@
 //! For a single request, you can use the [`get`][get] shortcut method.
 //!
 //! ```rust
-//! # async fn run() -> Result<(), reqwest::Error> {
-//! let body = reqwest::get("https://www.rust-lang.org")
+//! # async fn run() -> Result<(), reqwest_impersonate::Error> {
+//! let body = reqwest_impersonate::get("https://www.rust-lang.org")
 //!     .await?
 //!     .text()
 //!     .await?;
@@ -54,13 +54,13 @@
 //! by using the `body()` method of a [`RequestBuilder`][builder]. This lets you set the
 //! exact raw bytes of what the body should be. It accepts various types,
 //! including `String` and `Vec<u8>`. If you wish to pass a custom
-//! type, you can use the `reqwest::Body` constructors.
+//! type, you can use the `reqwest_impersonate::Body` constructors.
 //!
 //! ```rust
-//! # use reqwest::Error;
+//! # use reqwest_impersonate::Error;
 //! #
 //! # async fn run() -> Result<(), Error> {
-//! let client = reqwest::Client::new();
+//! let client = reqwest_impersonate::Client::new();
 //! let res = client.post("http://httpbin.org/post")
 //!     .body("the exact body that is sent")
 //!     .send()
@@ -78,12 +78,12 @@
 //! implements [`Serialize`][serde].
 //!
 //! ```rust
-//! # use reqwest::Error;
+//! # use reqwest_impersonate::Error;
 //! #
 //! # async fn run() -> Result<(), Error> {
 //! // This will POST a body of `foo=bar&baz=quux`
 //! let params = [("foo", "bar"), ("baz", "quux")];
-//! let client = reqwest::Client::new();
+//! let client = reqwest_impersonate::Client::new();
 //! let res = client.post("http://httpbin.org/post")
 //!     .form(&params)
 //!     .send()
@@ -99,7 +99,7 @@
 //! serialized into JSON. The feature `json` is required.
 //!
 //! ```rust
-//! # use reqwest::Error;
+//! # use reqwest_impersonate::Error;
 //! # use std::collections::HashMap;
 //! #
 //! # #[cfg(feature = "json")]
@@ -109,7 +109,7 @@
 //! map.insert("lang", "rust");
 //! map.insert("body", "json");
 //!
-//! let client = reqwest::Client::new();
+//! let client = reqwest_impersonate::Client::new();
 //! let res = client.post("http://httpbin.org/post")
 //!     .json(&map)
 //!     .send()
@@ -139,7 +139,7 @@
 //! `HTTPS_PROXY` or `https_proxy` provide HTTPS proxies for HTTPS connections.
 //!
 //! These can be overwritten by adding a [`Proxy`](Proxy) to `ClientBuilder`
-//! i.e. `let proxy = reqwest::Proxy::http("https://secure.example")?;`
+//! i.e. `let proxy = reqwest_impersonate::Proxy::http("https://secure.example")?;`
 //! or disabled by calling `ClientBuilder::no_proxy()`.
 //!
 //! `socks` feature is required if you have configured socks proxy like this:
@@ -241,7 +241,7 @@ pub use self::response::ResponseBuilderExt;
 
 /// Shortcut method to quickly make a `GET` request.
 ///
-/// See also the methods on the [`reqwest::Response`](./struct.Response.html)
+/// See also the methods on the [`reqwest_impersonate::Response`](./struct.Response.html)
 /// type.
 ///
 /// **NOTE**: This function creates a new internal `Client` on each call,
@@ -251,8 +251,8 @@ pub use self::response::ResponseBuilderExt;
 /// # Examples
 ///
 /// ```rust
-/// # async fn run() -> Result<(), reqwest::Error> {
-/// let body = reqwest::get("https://www.rust-lang.org").await?
+/// # async fn run() -> Result<(), reqwest_impersonate::Error> {
+/// let body = reqwest_impersonate::get("https://www.rust-lang.org").await?
 ///     .text().await?;
 /// # Ok(())
 /// # }

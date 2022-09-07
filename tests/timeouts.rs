@@ -16,7 +16,7 @@ async fn client_timeout() {
         }
     });
 
-    let client = reqwest::Client::builder()
+    let client = reqwest_impersonate::Client::builder()
         .timeout(Duration::from_millis(500))
         .build()
         .unwrap();
@@ -43,7 +43,7 @@ async fn request_timeout() {
         }
     });
 
-    let client = reqwest::Client::builder().build().unwrap();
+    let client = reqwest_impersonate::Client::builder().build().unwrap();
 
     let url = format!("http://{}/slow", server.addr());
 
@@ -68,7 +68,7 @@ async fn request_timeout() {
 async fn connect_timeout() {
     let _ = env_logger::try_init();
 
-    let client = reqwest::Client::builder()
+    let client = reqwest_impersonate::Client::builder()
         .connect_timeout(Duration::from_millis(100))
         .build()
         .unwrap();
@@ -102,7 +102,7 @@ async fn response_timeout() {
         }
     });
 
-    let client = reqwest::Client::builder()
+    let client = reqwest_impersonate::Client::builder()
         .timeout(Duration::from_millis(500))
         .no_proxy()
         .build()
@@ -126,7 +126,7 @@ fn timeout_closes_connection() {
 
     // Make Client drop *after* the Server, so the background doesn't
     // close too early.
-    let client = reqwest::blocking::Client::builder()
+    let client = reqwest_impersonate::blocking::Client::builder()
         .timeout(Duration::from_millis(500))
         .build()
         .unwrap();
@@ -153,7 +153,9 @@ fn timeout_blocking_request() {
 
     // Make Client drop *after* the Server, so the background doesn't
     // close too early.
-    let client = reqwest::blocking::Client::builder().build().unwrap();
+    let client = reqwest_impersonate::blocking::Client::builder()
+        .build()
+        .unwrap();
 
     let server = server::http(move |_req| {
         async {
@@ -179,7 +181,7 @@ fn timeout_blocking_request() {
 fn blocking_request_timeout_body() {
     let _ = env_logger::try_init();
 
-    let client = reqwest::blocking::Client::builder()
+    let client = reqwest_impersonate::blocking::Client::builder()
         // this should be overridden
         .connect_timeout(Duration::from_millis(200))
         // this should be overridden
@@ -220,7 +222,7 @@ fn write_timeout_large_body() {
 
     // Make Client drop *after* the Server, so the background doesn't
     // close too early.
-    let client = reqwest::blocking::Client::builder()
+    let client = reqwest_impersonate::blocking::Client::builder()
         .timeout(Duration::from_millis(500))
         .build()
         .unwrap();
@@ -237,7 +239,9 @@ fn write_timeout_large_body() {
     let url = format!("http://{}/write-timeout", server.addr());
     let err = client
         .post(&url)
-        .body(reqwest::blocking::Body::sized(cursor, len as u64))
+        .body(reqwest_impersonate::blocking::Body::sized(
+            cursor, len as u64,
+        ))
         .send()
         .unwrap_err();
 

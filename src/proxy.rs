@@ -29,7 +29,7 @@ use winreg::RegKey;
 ///
 /// ```rust
 /// # fn run() -> Result<(), Box<std::error::Error>> {
-/// let proxy = reqwest::Proxy::http("https://secure.example")?;
+/// let proxy = reqwest_impersonate::Proxy::http("https://secure.example")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -46,7 +46,7 @@ use winreg::RegKey;
 /// By enabling the `"socks"` feature it is possible to use a socks proxy:
 /// ```rust
 /// # fn run() -> Result<(), Box<std::error::Error>> {
-/// let proxy = reqwest::Proxy::http("socks5://192.168.1.1:9000")?;
+/// let proxy = reqwest_impersonate::Proxy::http("socks5://192.168.1.1:9000")?;
 /// # Ok(())
 /// # }
 /// ```
@@ -182,8 +182,8 @@ impl Proxy {
     /// ```
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let client = reqwest::Client::builder()
-    ///     .proxy(reqwest::Proxy::http("https://my.prox")?)
+    /// let client = reqwest_impersonate::Client::builder()
+    ///     .proxy(reqwest_impersonate::Proxy::http("https://my.prox")?)
     ///     .build()?;
     /// # Ok(())
     /// # }
@@ -202,8 +202,8 @@ impl Proxy {
     /// ```
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let client = reqwest::Client::builder()
-    ///     .proxy(reqwest::Proxy::https("https://example.prox:4545")?)
+    /// let client = reqwest_impersonate::Client::builder()
+    ///     .proxy(reqwest_impersonate::Proxy::https("https://example.prox:4545")?)
     ///     .build()?;
     /// # Ok(())
     /// # }
@@ -222,8 +222,8 @@ impl Proxy {
     /// ```
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let client = reqwest::Client::builder()
-    ///     .proxy(reqwest::Proxy::all("http://pro.xy")?)
+    /// let client = reqwest_impersonate::Client::builder()
+    ///     .proxy(reqwest_impersonate::Proxy::all("http://pro.xy")?)
     ///     .build()?;
     /// # Ok(())
     /// # }
@@ -242,9 +242,9 @@ impl Proxy {
     /// ```
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let target = reqwest::Url::parse("https://my.prox")?;
-    /// let client = reqwest::Client::builder()
-    ///     .proxy(reqwest::Proxy::custom(move |url| {
+    /// let target = reqwest_impersonate::Url::parse("https://my.prox")?;
+    /// let client = reqwest_impersonate::Client::builder()
+    ///     .proxy(reqwest_impersonate::Proxy::custom(move |url| {
     ///         if url.host_str() == Some("hyper.rs") {
     ///             Some(target.clone())
     ///         } else {
@@ -292,7 +292,7 @@ impl Proxy {
     /// ```
     /// # extern crate reqwest;
     /// # fn run() -> Result<(), Box<std::error::Error>> {
-    /// let proxy = reqwest::Proxy::https("http://localhost:1234")?
+    /// let proxy = reqwest_impersonate::Proxy::https("http://localhost:1234")?
     ///     .basic_auth("Aladdin", "open sesame");
     /// # Ok(())
     /// # }

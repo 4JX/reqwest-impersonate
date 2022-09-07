@@ -74,7 +74,7 @@ impl Policy {
     /// # Example
     ///
     /// ```rust
-    /// # use reqwest::{Error, redirect};
+    /// # use reqwest_impersonate::{Error, redirect};
     /// #
     /// # fn run() -> Result<(), Error> {
     /// let custom = redirect::Policy::custom(|attempt| {
@@ -87,7 +87,7 @@ impl Policy {
     ///         attempt.follow()
     ///     }
     /// });
-    /// let client = reqwest::Client::builder()
+    /// let client = reqwest_impersonate::Client::builder()
     ///     .redirect(custom)
     ///     .build()?;
     /// # Ok(())
@@ -114,7 +114,7 @@ impl Policy {
     /// # Example
     ///
     /// ```rust
-    /// # use reqwest::{Error, redirect};
+    /// # use reqwest_impersonate::{Error, redirect};
     /// #
     /// # fn run() -> Result<(), Error> {
     /// let custom = redirect::Policy::custom(|attempt| {
