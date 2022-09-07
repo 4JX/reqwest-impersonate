@@ -395,6 +395,23 @@ impl Connector {
                     });
                 }
             }
+            #[cfg(feature = "__boring")]
+            Inner::BoringTls { tls, .. } => {
+                if dst.scheme() == Some(&Scheme::HTTPS) {
+                    let host = dst.host().ok_or("no host in url")?.to_string();
+                    let conn = socks::connect(proxy, dst, dns).await?;
+                    let tls_connector = tls().build();
+                    let mut conf = tls_connector.configure()?;
+
+                    tls_add_application_settings(&mut conf);
+
+                    let io = tokio_boring::connect(conf, &host, conn).await?;
+                    return Ok(Conn {
+                        inner: self.verbose.wrap(BoringTlsConn { inner: io }),
+                        is_proxy: false,
+                    });
+                }
+            }
             #[cfg(not(feature = "__tls"))]
             Inner::Http(_) => (),
         }
