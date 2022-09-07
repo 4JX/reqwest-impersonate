@@ -653,6 +653,12 @@ impl ClientBuilder {
         self
     }
 
+    #[cfg(feature = "__browser_common")]
+    pub(crate) fn replace_default_headers(mut self, headers: HeaderMap) -> ClientBuilder {
+        self.config.headers = headers;
+        self
+    }
+
     /// Enable a persistent cookie store for the client.
     ///
     /// Cookies received in responses will be preserved and included in
