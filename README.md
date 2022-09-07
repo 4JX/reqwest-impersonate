@@ -30,7 +30,7 @@ reqwest-impersonate = { git = "https://github.com/4JX/reqwest-impersonate.git", 
 `main.rs`
 
 ```rs
-use reqwest_impersonate::ChromeVersion;
+use reqwest_impersonate::browser::ChromeVersion;
 
 fn main() {
     // Build a client to mimic Chrome 104
