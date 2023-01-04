@@ -1,9 +1,6 @@
 [package]
-name = "reqwest"
-version = "0.11.13"                                                 # remember to update html_root_url
-description = "higher level HTTP client library"
 name = "reqwest-impersonate"
-version = "0.11.12"                                                 # remember to update html_root_url
+version = "0.11.13"                                                 # remember to update html_root_url
 description = "A reqwest fork that impersonates the Chrome browser"
 keywords = ["http", "request", "client"]
 categories = ["web-programming::http-client", "wasm"]
@@ -47,7 +44,7 @@ blocking = ["futures-util/io", "tokio/rt-multi-thread", "tokio/sync"]
 chrome = ["__chrome"]
 
 
-cookies = ["cookie_crate", "cookie_store", "proc-macro-hack"]
+cookies = ["cookie_crate", "cookie_store"]
 gzip = ["async-compression", "async-compression/gzip", "tokio-util"]
 
 brotli = ["async-compression", "async-compression/brotli", "tokio-util"]
