@@ -1,3 +1,9 @@
+# Archived
+
+As explained bellow this project was meant as an experiment for my own learning purposes. If you want an up to date working client based off my work, feel free to check out https://github.com/0x676e67/rquest.
+
+Note that I have no relations to that project.
+
 # reqwest-impersonate
 
 A fork of reqwest used to impersonate the Chrome browser. Inspired by [curl-impersonate](https://github.com/lwthiker/curl-impersonate).
